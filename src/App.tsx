@@ -1,9 +1,10 @@
+import Editor from './components/Editor';
 import ThemeProvider from './providers/ThemeProvider';
 
 const App = () => {
   return (
     <ThemeProvider>
-      <div>React App</div>
+      <Editor />
     </ThemeProvider>
   );
 };
