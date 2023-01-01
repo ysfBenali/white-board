@@ -1,5 +1,11 @@
+import ThemeProvider from './providers/ThemeProvider';
+
 const App = () => {
-  return <div>React App</div>;
+  return (
+    <ThemeProvider>
+      <div>React App</div>
+    </ThemeProvider>
+  );
 };
 
 export default App;
