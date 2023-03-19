@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer base {
+  :root {
+    --color-primary: 91, 87, 209;
+    --color-secondary: 184, 184, 184;
+
+    /* buttons */
+    --color-button-muted: 86, 80, 240;
+    --color-button-muted-border: 91, 87, 209;
+
+    /* inputs  */
+    /* --color-input-border: #f3f4f6; */
+    /* --color-input: 18, 18, 18; */
+
+  }
+
+  [data-mode="dark"]{
+    --color-primary: 91, 87, 209;
+    --color-secondary: 184, 184, 184;
+
+    /* buttons */
+    --color-button-muted: 105, 101, 219;
+    --color-button-muted-border: 178, 174, 255;
+
+     /* inputs  */
+    /* --color-input: 255, 255, 255; */
+    /* --color-input-border: #181818; */
+  }
+}
+
+
 html, body, #root {
   width: 100%;
 }
