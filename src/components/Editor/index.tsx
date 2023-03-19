@@ -4,6 +4,7 @@ import rough from 'roughjs';
 import { Options } from 'roughjs/bin/core';
 import { Coordinates, Element, Point } from '../../types';
 import TopMenu from '../TopMenu';
+import useWindowSize from '../../hooks/useWindowSize';
 
 const generator = rough.generator();
 
@@ -103,6 +104,8 @@ const Editor = () => {
   const theme = useTheme();
   const isDark = theme === 'dark';
 
+  const { width: canvasWidth, height: canvasHeight } = useWindowSize();
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [elements, setElements] = useState<Element[]>([]);
   const [selectedElement, setSelectedElement] = useState<Element | null>(null);
@@ -118,7 +121,7 @@ const Editor = () => {
     const roughCanvas = rough.canvas(canvas);
 
     elements.forEach(({ roughElement }) => roughCanvas.draw(roughElement));
-  }, [elements]);
+  }, [elements, canvasWidth, canvasHeight]);
 
   useEffect(() => {
     const updatedElements = elements?.map((item) => {
@@ -262,7 +265,7 @@ const Editor = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col bg-white text-black dark:bg-black dark:text-white">
+    <div className="flex h-full w-full flex-col bg-fill text-base dark:bg-fill-dark dark:text-base-dark">
       <div className="pointer-events-none absolute h-full w-full p-4">
         <div className="relative z-30 grid grid-cols-4 gap-12">
           <div className="pointer-events-auto justify-self-start">
@@ -279,11 +282,11 @@ const Editor = () => {
       </div>
       <main>
         <canvas
-          className="absolute z-20 bg-white dark:bg-black"
+          className="absolute z-20 bg-fill text-inverted dark:bg-fill-dark dark:text-inverted"
           id="canvas"
           ref={canvasRef}
-          height={window.innerHeight}
-          width={window.innerWidth}
+          height={canvasHeight}
+          width={canvasWidth}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
