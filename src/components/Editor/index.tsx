@@ -1,10 +1,10 @@
+import rough from 'roughjs';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTheme, useToggleTheme } from '../../providers/ThemeProvider';
-import rough from 'roughjs';
-import { Options } from 'roughjs/bin/core';
-import { Coordinates, Element, Point } from '../../types';
-import TopMenu from '../TopMenu';
 import useWindowSize from '../../hooks/useWindowSize';
+import { Options } from 'roughjs/bin/core';
+import TopMenu from '../TopMenu';
+import { Coordinates, Element, Point } from '../../types';
 
 const generator = rough.generator();
 
@@ -36,6 +36,7 @@ const adjustElementCoordinates = (element: Element): Coordinates => {
     if (x1 < x2 || x1 === x2 || y1 < y2) return { x1, y1, x2, y2 };
     else return { x1: x2, y1: y2, x2: x1, y2: y1 };
   }
+
   return element;
 };
 
@@ -265,7 +266,7 @@ const Editor = () => {
   };
 
   return (
-    <div className="flex h-full w-full flex-col bg-fill text-base dark:bg-fill-dark dark:text-base-dark">
+    <div className="flex h-full w-full flex-col bg-white text-base dark:bg-zinc-900 dark:text-base-dark">
       <div className="pointer-events-none absolute h-full w-full p-4">
         <div className="relative z-30 grid grid-cols-4 gap-12">
           <div className="pointer-events-auto justify-self-start">
@@ -282,7 +283,7 @@ const Editor = () => {
       </div>
       <main>
         <canvas
-          className="absolute z-20 bg-fill text-inverted dark:bg-fill-dark dark:text-inverted"
+          className="absolute z-20 bg-white dark:bg-zinc-900"
           id="canvas"
           ref={canvasRef}
           height={canvasHeight}

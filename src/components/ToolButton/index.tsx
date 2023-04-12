@@ -21,8 +21,8 @@ const ToolButton = ({
         `box-border flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg ` +
         `${
           checked
-            ? 'bg-button-muted bg-opacity-20 dark:bg-opacity-30 '
-            : 'hover:bg-secondary hover:bg-opacity-30 hover:active:border hover:active:border-button-muted dark:hover:bg-opacity-10'
+            ? 'bg-true-v-600 bg-opacity-20 dark:bg-true-v-400 dark:bg-opacity-30 '
+            : 'hover:bg-alto-400 hover:bg-opacity-30 hover:active:border hover:active:border-true-v-700 dark:hover:bg-opacity-10 dark:hover:active:border-true-v-300'
         }`
       }
       htmlFor={type}
@@ -38,7 +38,9 @@ const ToolButton = ({
         {checked ? (
           <Icon
             className={`${
-              fillable ? 'fill-primary stroke-primary' : 'stroke-primary'
+              fillable
+                ? 'fill-true-v-600 stroke-true-v-600 dark:fill-true-v-400 dark:stroke-true-v-400'
+                : 'stroke-true-v-600 dark:stroke-true-v-400'
             }`}
           />
         ) : (
