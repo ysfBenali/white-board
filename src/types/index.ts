@@ -5,8 +5,13 @@ export type Point = {
     y: number;
 }
 
-export type Coordinates = { x1: number; x2: number; y1: number; y2: number }
-  
+export type Coordinates = {
+    x1: number;
+    x2: number;
+    y1: number;
+    y2: number;
+}
+
 export type Element = Coordinates & {
     id: number;
     offsetX?: number;
@@ -14,4 +19,4 @@ export type Element = Coordinates & {
     position?: string;
     roughElement: Drawable;
     type: string;
-  }
+}

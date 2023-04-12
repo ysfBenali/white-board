@@ -35,9 +35,9 @@ export const SelectionIcon = ({ className }: IconProps) =>
 
 export const RectangleIcon = ({ className }: IconProps) =>
   createIcon(
-    <g strokeWidth="1.5">
+    <g strokeWidth="1.3">
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+      <rect x="5" y="5" width="15" height="15" rx="2.5"></rect>
     </g>,
     {
       className,
@@ -55,6 +55,17 @@ export const LineIcon = ({ className }: IconProps) =>
     className,
     width: 20,
     height: 20,
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  });
+
+export const CircleIcon = ({ className }: IconProps) =>
+  createIcon(<circle cx="12" cy="12" r="7.5" strokeWidth="1.4" />, {
+    className,
+    width: 24,
+    height: 24,
     fill: 'none',
     stroke: 'currentColor',
     strokeLinecap: 'round',

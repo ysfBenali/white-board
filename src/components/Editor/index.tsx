@@ -2,7 +2,7 @@ import rough from 'roughjs';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTheme, useToggleTheme } from '../../providers/ThemeProvider';
 import useWindowSize from '../../hooks/useWindowSize';
-import { Options } from 'roughjs/bin/core';
+import { Options, Drawable } from 'roughjs/bin/core';
 import TopMenu from '../TopMenu';
 import { Coordinates, Element, Point } from '../../types';
 
@@ -15,10 +15,17 @@ const createElement = (
   options?: Options,
 ): Element => {
   const { x1, y1, x2, y2 } = coordinates;
-  const roughElement =
-    type === 'line'
-      ? generator.line(x1, y1, x2, y2, options)
-      : generator.rectangle(x1, y1, x2 - x1, y2 - y1, options);
+  let roughElement = {} as Drawable;
+
+  if (type === 'line') roughElement = generator.line(x1, y1, x2, y2, options);
+  if (type === 'rectangle')
+    roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, options);
+  if (type === 'ellipse') {
+    const cx = (x1 + x2) / 2;
+    const cy = (y1 + y2) / 2;
+    roughElement = generator.ellipse(cx, cy, x2 - x1, y2 - y1, options);
+  }
+
   return { id, x1, y1, x2, y2, type, roughElement };
 };
 
@@ -59,6 +66,7 @@ const positionWithinElement = (x: number, y: number, element: Element) => {
     const bottomLeft = nearPoint(x, y, x1, y2, 'bl');
     const bottomRight = nearPoint(x, y, x2, y2, 'br');
     const inside = x >= x1 && x <= x2 && y >= y1 && y <= y2 ? 'inside' : null;
+
     return topLeft || topRight || bottomLeft || bottomRight || inside;
   }
   if (type === 'line') {
@@ -69,7 +77,22 @@ const positionWithinElement = (x: number, y: number, element: Element) => {
     const start = nearPoint(x, y, x1, y1, 'start');
     const end = nearPoint(x, y, x2, y2, 'end');
     const inside = Math.abs(offset) < 1 ? 'inside' : null;
+
     return start || end || inside;
+  }
+  if (type === 'ellipse') {
+    const centerX = (x1 + x2) / 2;
+    const centerY = (y1 + y2) / 2;
+    const radiusX = Math.abs(x2 - x1) / 2;
+    const radiusY = Math.abs(y2 - y1) / 2;
+    const normalizedX = (x - centerX) / radiusX;
+    const normalizedY = (y - centerY) / radiusY;
+    const distanceFromCenter = Math.sqrt(
+      normalizedX * normalizedX + normalizedY * normalizedY,
+    );
+    const inside = distanceFromCenter <= 1.125 ? 'inside' : null;
+
+    return inside;
   } else throw new Error(`Type not recognised: ${type}`);
 };
 
