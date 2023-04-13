@@ -1,10 +1,11 @@
-import rough from 'roughjs';
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useTheme, useToggleTheme } from '../../providers/ThemeProvider';
-import useWindowSize from '../../hooks/useWindowSize';
 import { Options, Drawable } from 'roughjs/bin/core';
+import rough from 'roughjs';
+import { Coordinates, Element } from '../../types';
+import { cursorPosition, distance, nearPoint } from '../../utils';
+import useWindowSize from '../../hooks/useWindowSize';
+import { useTheme, useToggleTheme } from '../../providers/ThemeProvider';
 import TopMenu from '../TopMenu';
-import { Coordinates, Element, Point } from '../../types';
 
 const generator = rough.generator();
 
@@ -47,72 +48,51 @@ const adjustElementCoordinates = (element: Element): Coordinates => {
   return element;
 };
 
-const nearPoint = (
-  x: number,
-  y: number,
-  x1: number,
-  y1: number,
-  positionName: string,
-) => {
-  return Math.abs(x - x1) < 5 && Math.abs(y - y1) < 5 ? positionName : null;
-};
-
 const positionWithinElement = (x: number, y: number, element: Element) => {
   const { x1, y1, x2, y2, type } = element;
 
-  if (type === 'rectangle') {
-    const topLeft = nearPoint(x, y, x1, y1, 'tl');
-    const topRight = nearPoint(x, y, x2, y1, 'tr');
-    const bottomLeft = nearPoint(x, y, x1, y2, 'bl');
-    const bottomRight = nearPoint(x, y, x2, y2, 'br');
-    const inside = x >= x1 && x <= x2 && y >= y1 && y <= y2 ? 'inside' : null;
+  switch (type) {
+    case 'rectangle': {
+      const topLeft = nearPoint(x, y, x1, y1, 'tl');
+      const topRight = nearPoint(x, y, x2, y1, 'tr');
+      const bottomLeft = nearPoint(x, y, x1, y2, 'bl');
+      const bottomRight = nearPoint(x, y, x2, y2, 'br');
+      const inside = x >= x1 && x <= x2 && y >= y1 && y <= y2 ? 'inside' : null;
 
-    return topLeft || topRight || bottomLeft || bottomRight || inside;
-  }
-  if (type === 'line') {
-    const a = { x: x1, y: y1 };
-    const b = { x: x2, y: y2 };
-    const c = { x, y };
-    const offset = distance(a, b) - (distance(a, c) + distance(b, c));
-    const start = nearPoint(x, y, x1, y1, 'start');
-    const end = nearPoint(x, y, x2, y2, 'end');
-    const inside = Math.abs(offset) < 1 ? 'inside' : null;
+      return topLeft || topRight || bottomLeft || bottomRight || inside;
+    }
 
-    return start || end || inside;
-  }
-  if (type === 'ellipse') {
-    const centerX = (x1 + x2) / 2;
-    const centerY = (y1 + y2) / 2;
-    const radiusX = Math.abs(x2 - x1) / 2;
-    const radiusY = Math.abs(y2 - y1) / 2;
-    const normalizedX = (x - centerX) / radiusX;
-    const normalizedY = (y - centerY) / radiusY;
-    const distanceFromCenter = Math.sqrt(
-      normalizedX * normalizedX + normalizedY * normalizedY,
-    );
-    const inside = distanceFromCenter <= 1.125 ? 'inside' : null;
+    case 'line': {
+      const a = { x: x1, y: y1 };
+      const b = { x: x2, y: y2 };
+      const c = { x, y };
+      const offset = distance(a, b) - (distance(a, c) + distance(b, c));
+      const start = nearPoint(x, y, x1, y1, 'start');
+      const end = nearPoint(x, y, x2, y2, 'end');
+      const inside = Math.abs(offset) < 1 ? 'inside' : null;
 
-    return inside;
-  } else throw new Error(`Type not recognised: ${type}`);
-};
+      return start || end || inside;
+    }
 
-const cursorPosition = (position: string): string => {
-  switch (position) {
-    case 'tr':
-    case 'bl':
-      return 'nesw-resize';
-    case 'tl':
-    case 'br':
-    case 'start':
-    case 'end':
-      return 'nwse-resize';
+    case 'ellipse': {
+      const centerX = (x1 + x2) / 2;
+      const centerY = (y1 + y2) / 2;
+      const radiusX = Math.abs(x2 - x1) / 2;
+      const radiusY = Math.abs(y2 - y1) / 2;
+      const normalizedX = (x - centerX) / radiusX;
+      const normalizedY = (y - centerY) / radiusY;
+      const distanceFromCenter = Math.sqrt(
+        normalizedX * normalizedX + normalizedY * normalizedY,
+      );
+      const inside = distanceFromCenter <= 1.125 ? 'inside' : null;
+
+      return inside;
+    }
+
     default:
-      return 'move';
+      throw new Error(`Type not recognised: ${type}`);
   }
 };
-
-const distance = (a: Point, b: Point) =>
-  Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 
 const getElementAtPosition = (x: number, y: number, elements: Element[]) => {
   return elements
