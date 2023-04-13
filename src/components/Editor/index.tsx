@@ -16,15 +16,28 @@ const createElement = (
   options?: Options,
 ): Element => {
   const { x1, y1, x2, y2 } = coordinates;
-  let roughElement = {} as Drawable;
 
-  if (type === 'line') roughElement = generator.line(x1, y1, x2, y2, options);
-  if (type === 'rectangle')
-    roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, options);
-  if (type === 'ellipse') {
-    const cx = (x1 + x2) / 2;
-    const cy = (y1 + y2) / 2;
-    roughElement = generator.ellipse(cx, cy, x2 - x1, y2 - y1, options);
+  let roughElement: Drawable;
+
+  switch (type) {
+    case 'line':
+      roughElement = generator.line(x1, y1, x2, y2, options);
+      break;
+    case 'rectangle':
+      roughElement = generator.rectangle(x1, y1, x2 - x1, y2 - y1, options);
+      break;
+    case 'ellipse': {
+      const cx = (x1 + x2) / 2;
+      const cy = (y1 + y2) / 2;
+      roughElement = generator.ellipse(cx, cy, x2 - x1, y2 - y1, {
+        ...options,
+        curveFitting: 1,
+      });
+      break;
+    }
+
+    default:
+      throw new Error(`Type not recognised: ${type}`);
   }
 
   return { id, x1, y1, x2, y2, type, roughElement };
