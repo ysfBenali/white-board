@@ -1,5 +1,5 @@
-import React, { createContext, useContext } from 'react';
 import useDarkMode from '../../hooks/useDarkMode';
+import React, { createContext, useContext } from 'react';
 
 const ThemeContext = createContext<string>('light');
 const ThemeDispatchContext = createContext<(() => void) | undefined>(undefined);

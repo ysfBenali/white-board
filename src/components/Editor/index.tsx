@@ -1,11 +1,11 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Options, Drawable } from 'roughjs/bin/core';
-import rough from 'roughjs';
-import { Coordinates, Element } from '../../types';
-import { cursorPosition, distance, nearPoint } from '../../utils';
 import useWindowSize from '../../hooks/useWindowSize';
 import { useTheme, useToggleTheme } from '../../providers/ThemeProvider';
+import { Coordinates, Element } from '../../types';
+import { cursorPosition, distance, nearPoint } from '../../utils';
 import TopMenu from '../TopMenu';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import rough from 'roughjs';
+import { Options, Drawable } from 'roughjs/bin/core';
 
 const generator = rough.generator();
 
@@ -293,7 +293,7 @@ const Editor = () => {
           </section>
           <div className="justify-self-end">right section</div>
         </div>
-        <footer className="pointer-events-none absolute left-0 bottom-4 z-30 w-full px-4 text-center">
+        <footer className="pointer-events-none absolute bottom-4 left-0 z-30 w-full px-4 text-center">
           App Footer
         </footer>
       </div>

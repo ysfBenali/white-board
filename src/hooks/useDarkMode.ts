@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import useMedia from './useMedia';
+import { useEffect, useState } from 'react';
 
 const useDarkMode = (): {
   theme: string;
